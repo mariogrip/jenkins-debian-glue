@@ -28,15 +28,15 @@ cd ..
     }
     stage('Build binary - armhf') {
       steps {
-        unstash 'source'
         node(label: 'xenial-armhf') {
+          unstash 'source'
           sh '''export architecture="armhf"
 export REPOS="xenial"
 /usr/bin/generate-reprepro-codename "${REPOS}"
 /usr/bin/build-and-provide-package'''
+          stash(includes: '*.deb,*.changes,*.buildinfo,lintian.txt', name: 'build')
         }
         
-        stash(name: 'build', includes: '*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt')
       }
     }
     stage('Results') {
