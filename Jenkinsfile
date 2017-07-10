@@ -32,6 +32,7 @@ cd ..
           unstash 'source'
           sh '''export architecture="armhf"
 export REPOS="xenial"
+export BUILD_ONLY=true
 /usr/bin/generate-reprepro-codename "${REPOS}"
 /usr/bin/build-and-provide-package'''
           stash(includes: '*.deb,*.changes,*.buildinfo,lintian.txt', name: 'build')
@@ -43,6 +44,18 @@ export REPOS="xenial"
       steps {
         unstash 'build'
         archiveArtifacts(artifacts: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo', fingerprint: true, onlyIfSuccessful: true)
+        sh '''export architecture="armhf"
+export REPOS="xenial"
+
+mkdir -p binaries
+
+for suffix in gz bz2 xz deb dsc changes ; do
+  mv */*.${suffix} binaries/ || true
+done
+
+export BASE_PATH="binaries/"
+export PROVIDE_ONLY=true
+/usr/bin/build-and-provide-package'''
       }
     }
     stage('Cleanup') {
