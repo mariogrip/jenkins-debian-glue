@@ -30,9 +30,7 @@ cd ..
       steps {
         node(label: 'xenial-armhf') {
           unstash 'source'
-          sh '''rm -f ./* || true
-
-export architecture="armhf"
+          sh '''export architecture="armhf"
 export REPOS="xenial"
 export BUILD_ONLY=true
 /usr/bin/generate-reprepro-codename "${REPOS}"
