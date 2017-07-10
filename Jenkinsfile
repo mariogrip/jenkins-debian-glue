@@ -23,10 +23,12 @@ export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 cd ..
 /usr/bin/generate-git-snapshot
 '''
+        stash(name: 'source', includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt')
       }
     }
     stage('Build binary - armhf') {
       steps {
+        unstash 'source'
         node(label: 'xenial-armhf') {
           sh '''export architecture="armhf"
 export REPOS="xenial"
@@ -34,11 +36,13 @@ export REPOS="xenial"
 /usr/bin/build-and-provide-package'''
         }
         
+        stash(name: 'build', includes: '*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt')
       }
     }
     stage('Results') {
       steps {
-        archiveArtifacts '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo'
+        unstash 'build'
+        archiveArtifacts(artifacts: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo', fingerprint: true, onlyIfSuccessful: true)
       }
     }
     stage('Cleanup') {
