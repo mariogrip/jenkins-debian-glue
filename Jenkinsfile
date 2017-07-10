@@ -6,18 +6,23 @@ pipeline {
         dir(path: 'source') {
           git 'https://github.com/mariogrip/jenkins-debian-glue.git'
           script {
-             def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-             def gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+            def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+            def gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
           }
-        } 
+          
+        }
+        
       }
     }
     stage('Build source') {
       steps {
         sh 'rm -f ./* || true'
-        withEnv(["GIT_COMMIT=${gitCommit}", "GIT_BRANCH=${gitBranch}"]) {
+        script {
+          withEnv(["GIT_COMMIT=${gitCommit}", "GIT_BRANCH=${gitBranch}"]) {
             sh '/usr/bin/generate-git-snapshot'
+          }
         }
+        
       }
     }
     stage('Build binary - armhf') {
