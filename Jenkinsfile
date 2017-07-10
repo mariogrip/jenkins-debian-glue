@@ -35,7 +35,7 @@ export REPOS="xenial"
 export BUILD_ONLY=true
 /usr/bin/generate-reprepro-codename "${REPOS}"
 /usr/bin/build-and-provide-package'''
-          stash(includes: '*.deb,*.changes,*.buildinfo,lintian.txt', name: 'build')
+          stash(includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt', name: 'build')
         }
         
       }
