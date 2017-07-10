@@ -5,8 +5,10 @@ pipeline {
       steps {
         dir(path: 'source') {
           git 'https://github.com/mariogrip/jenkins-debian-glue.git'
-          def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-          def gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+          script {
+             def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+             def gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()'
+          }
         } 
       }
     }
