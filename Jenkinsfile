@@ -7,7 +7,7 @@ pipeline {
           git 'https://github.com/mariogrip/jenkins-debian-glue.git'
           script {
              def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-             def gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()'
+             def gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
           }
         } 
       }
