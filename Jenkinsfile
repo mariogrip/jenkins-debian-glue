@@ -17,12 +17,12 @@ pipeline {
     stage('Build source') {
       steps {
         sh 'rm -f ./* || true'
-        script {
-          withEnv(["GIT_COMMIT=${gitCommit}", "GIT_BRANCH=${gitBranch}"]) {
-            sh '/usr/bin/generate-git-snapshot'
-          }
-        }
-        
+        sh '''cd source
+export GIT_COMMIT=$(git rev-parse HEAD)
+export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+cd ..
+/usr/bin/generate-git-snapshot
+'''
       }
     }
     stage('Build binary - armhf') {
