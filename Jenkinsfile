@@ -30,12 +30,15 @@ cd ..
       steps {
         node(label: 'xenial-armhf') {
           unstash 'source'
-          sh '''export architecture="armhf"
+          sh '''rm -f ./* || true
+
+export architecture="armhf"
 export REPOS="xenial"
 export BUILD_ONLY=true
 /usr/bin/generate-reprepro-codename "${REPOS}"
 /usr/bin/build-and-provide-package'''
           stash(includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt', name: 'build')
+          cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
         }
         
       }
@@ -59,7 +62,7 @@ export PROVIDE_ONLY=true
     }
     stage('Cleanup') {
       steps {
-        cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true)
+        cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
       }
     }
   }
