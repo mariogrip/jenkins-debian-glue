@@ -27,10 +27,13 @@ cd ..
     }
     stage('Build binary - armhf') {
       steps {
-        sh '''export architecture="armhf"
+        node(label: 'xenial-armhf') {
+          sh '''export architecture="armhf"
 export REPOS="xenial"
 /usr/bin/generate-reprepro-codename "${REPOS}"
 /usr/bin/build-and-provide-package'''
+        }
+        
       }
     }
     stage('Results') {
