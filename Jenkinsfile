@@ -1,14 +1,12 @@
 pipeline {
   agent any
-  def gitCommit
-  def gitBranch
   stages {
     stage('Preparation') {
       steps {
         dir(path: 'source') {
           git 'https://github.com/mariogrip/jenkins-debian-glue.git'
-          gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-          gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+          def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+          def gitBranch = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
         } 
       }
     }
