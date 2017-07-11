@@ -28,9 +28,9 @@ cd ..
     }
     stage('Build binary - armhf') {
       steps {
-        node(label: 'xenial-arm64') {
+        node(label: 'xenial-cpu') {
           unstash 'source'
-          sh '''export architecture="arm64"
+          sh '''export architecture="armhf"
 export REPOS="xenial"
 export BUILD_ONLY=true
 /usr/bin/generate-reprepro-codename "${REPOS}"
