@@ -28,9 +28,9 @@ cd ..
     }
     stage('Build binary - armhf') {
       steps {
-        node(label: 'master') {
+        node(label: 'xenial-arm64') {
           unstash 'source'
-          sh '''export architecture="and64"
+          sh '''export architecture="armhf"
 export BUILD_ONLY=true
 /usr/bin/build-and-provide-package'''
           stash(includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt', name: 'build')
