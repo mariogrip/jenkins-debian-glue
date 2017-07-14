@@ -17,7 +17,7 @@ pipeline {
     stage('Build source') {
       steps {
         sh 'rm -f ./* || true'
-        sh '/root/build-tools/build-source.sh'
+        sh '/usr/bin/build-source.sh'
         stash(name: 'source', includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt')
         cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
       }
@@ -27,7 +27,7 @@ pipeline {
         node(label: 'xenial-arm64') {
           unstash 'source'
           sh '''export architecture="armhf"
-/root/build-tools/build-binary.sh'''
+/usr/bin/build-binary.sh'''
           stash(includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt', name: 'build')
           cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
         }
@@ -39,7 +39,7 @@ pipeline {
         unstash 'build'
         archiveArtifacts(artifacts: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo', fingerprint: true, onlyIfSuccessful: true)
         sh '''export architecture="armhf"
-/root/build-tools/build-repo.sh'''
+/usr/bin/build-repo.sh'''
       }
     }
     stage('Cleanup') {
