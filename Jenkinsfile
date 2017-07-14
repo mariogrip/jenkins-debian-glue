@@ -28,12 +28,10 @@ cd ..
     }
     stage('Build binary - armhf') {
       steps {
-        node(label: 'xenial-cpu') {
+        node(label: 'master') {
           unstash 'source'
-          sh '''export architecture="armhf"
-export REPOS="xenial"
+          sh '''export architecture="and64"
 export BUILD_ONLY=true
-/usr/bin/generate-reprepro-codename "${REPOS}"
 /usr/bin/build-and-provide-package'''
           stash(includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo,lintian.txt', name: 'build')
           cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
@@ -46,7 +44,7 @@ export BUILD_ONLY=true
         unstash 'build'
         archiveArtifacts(artifacts: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,*.buildinfo', fingerprint: true, onlyIfSuccessful: true)
         sh '''export architecture="armhf"
-export REPOS="xenial"
+export release="ubports"
 mkdir -p binaries
 
 for suffix in gz bz2 xz deb dsc changes ; do
@@ -55,6 +53,7 @@ done
 
 export BASE_PATH="binaries/"
 export PROVIDE_ONLY=true
+/usr/bin/generate-reprepro-codename
 /usr/bin/build-and-provide-package'''
       }
     }
