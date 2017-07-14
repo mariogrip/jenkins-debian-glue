@@ -53,7 +53,6 @@ done
 
 export BASE_PATH="binaries/"
 export PROVIDE_ONLY=true
-/usr/bin/generate-reprepro-codename
 /usr/bin/build-and-provide-package'''
       }
     }
